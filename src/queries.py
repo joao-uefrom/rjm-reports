@@ -77,14 +77,15 @@ def get_itens(
         de: datetime = None, ate: datetime = None
 ) -> List[Item]:
     query = """
-    SELECT produto_detalhe.CODIGO                      AS codigo,
+    SELECT produto_detalhe.CODIGO AS codigo,
        CASE
            WHEN produto_detalhe.CODIGOPRODUTOTAMANHO IS NULL THEN produto.NOME
            ELSE produto_personalizado.DESCRICAO || ' ' || produto.NOME || ' ' || produto_tamanho.DESCRICAO
-           END                                     AS produto,
-       item.QUANTIDADE                             AS quantidade,
-       produto_detalhe.PRECOVENDA                  AS valor_unitario,
-       item.VALORTOTAL                             AS valor_total
+           END                    AS produto,
+       item.QUANTIDADE            AS quantidade,
+       produto_detalhe.PRECOVENDA AS valor_unitario,
+       item.VALORITEM             AS valor_cobrado,
+       item.VALORTOTAL            AS valor_total
     FROM ITENSPEDIDO item
              LEFT JOIN PEDIDOS pedido ON item.CODIGOPEDIDO = pedido.CODIGO
              LEFT JOIN PRODUTODETALHE produto_detalhe ON item.CODIGOPRODUTODETALHE = produto_detalhe.CODIGO
@@ -96,7 +97,7 @@ def get_itens(
     query_end = "pedido.DATADELETE IS NULL AND pedido.DATAFECHAMENTO IS NOT NULL AND item.DATADELETE IS NULL AND item.CODIGOPAI IS NULL"
 
     if pedido is not None:
-        query += " WHERE item.CODIGOPEDIDO = ?"
+        query += " WHERE item.CODIGOPEDIDO = ? AND " + query_end
         cur.execute(query, (pedido,))
     elif ate is not None:
         query += " WHERE CAST(pedido.DATAABERTURA AS DATE) BETWEEN ? AND ? AND " + query_end
@@ -114,7 +115,8 @@ def get_itens(
                 nome=row[1].strip(),
                 quantidade=row[2],
                 valor_unitario=row[3],
-                valor_total=row[4]
+                valor_cobrado=row[4],
+                valor_total=row[5]
             )
         )
 

@@ -9,6 +9,7 @@ class Item:
     nome: str
     quantidade: int
     valor_unitario: float
+    valor_cobrado: float
     valor_total: float
 
     def __eq__(self, other):

@@ -205,7 +205,7 @@ class ReportPedidos(Report):
                 worksheet.write(f'B{current_row}', item.codigo, border_format)
                 worksheet.write(f'C{current_row}', item.nome, border_format)
                 worksheet.write(f'D{current_row}', item.quantidade, border_format)
-                worksheet.write(f'E{current_row}', item.valor_unitario, money_format2)
+                worksheet.write(f'E{current_row}', item.valor_cobrado, money_format2)
                 worksheet.write(f'F{current_row}', item.valor_total, money_format2)
                 worksheet.set_row(current_row - 1, None, None, {'level': 1, 'hidden': True})
 
