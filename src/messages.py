@@ -38,6 +38,7 @@ Ticket médio: {formatar_real(relatorio.ticket_medio_local)}\n\n""")
     message += escape_message(f"""
 Qtd. de pedidos: {relatorio.quantidade_total}
 Total vendido: {formatar_real(relatorio.valor_total)}
+Total fiado: {formatar_real(relatorio.valor_fiado)}
 Ticket médio: {formatar_real(relatorio.ticket_medio)}""")
 
     return message
