@@ -17,14 +17,13 @@ class Report(ABC):
 
 
 class ReportItens(Report):
-    de: datetime
-    ate: datetime
     ticket_medio: float
     quantidade_total: int = 0
     valor_total: float = 0
-    itens: List[Item] = []
 
     def __init__(self, de: datetime, ate: datetime, itens: List[Item]):
+        self.itens = []
+
         for item in itens:
             if item not in self.itens:
                 self.itens.append(item)
@@ -87,23 +86,20 @@ class ReportItens(Report):
 
 
 class ReportPedidos(Report):
-    de: datetime
-    ate: datetime
     ticket_medio: float
     quantidade_total: int = 0
     valor_total: float = 0
     valor_fiado: float = 0
-    pedidos: List[Pedido] = []
 
-    ticket_medio_ifood: float = 0
+    ticket_medio_ifood: float
     quantidade_ifood: int = 0
     total_ifood: float = 0
 
-    ticket_medio_whatsapp: float = 0
+    ticket_medio_whatsapp: float
     quantidade_whatsapp: int = 0
     total_whatsapp: float = 0
 
-    ticket_medio_local: float = 0
+    ticket_medio_local: float
     quantidade_local: int = 0
     total_local: float = 0
 
