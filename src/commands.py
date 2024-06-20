@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import io
 import os
 
@@ -30,6 +30,9 @@ async def command_report(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         if len(context.args) == 0:
             de = datetime.now()
+            ate = de
+        elif context.args[0].lower() == 'ontem' or context.args[0] == '-1':
+            de = datetime.now() - timedelta(days=1)
             ate = de
         elif 0 < len(context.args) < 2:
             de = to_datetime(context.args[0])
