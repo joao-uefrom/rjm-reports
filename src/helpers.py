@@ -26,7 +26,7 @@ def tempo_atendimento(s: int) -> str:
     hours = s // 3600
     minutes = (s % 3600) // 60
     secs = s % 60
-    return f"{hours}h {minutes}m {secs}s"
+    return f"{int(hours)}h {int(minutes)}m {int(secs)}s"
 
 
 def to_datetime(value: str) -> datetime:

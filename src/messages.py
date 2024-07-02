@@ -1,9 +1,12 @@
-from src.helpers import escape_message, formatar_real, formatar_data
+from src.helpers import escape_message, formatar_real, formatar_data, tempo_atendimento
 from src.reports import ReportItens, ReportPedidos
 
 
 def message_report_itens(relatorio: ReportItens):
-    message = f'entre {formatar_data(relatorio.de)} e {formatar_data(relatorio.ate)}:\n\n'
+    if relatorio.de == relatorio.ate:
+        message = f'de {formatar_data(relatorio.de)}:\n\n'
+    else:
+        message = f'entre {formatar_data(relatorio.de)} e {formatar_data(relatorio.ate)}:\n\n'
 
     for i, item in enumerate(relatorio.itens, start=1):
         message += f'#{i} - {item.nome}\n{item.quantidade} x {formatar_real(item.valor_unitario)} = {formatar_real(item.valor_total)} ~ {formatar_real(item.valor_total / item.quantidade)}\n\n'
@@ -15,30 +18,45 @@ def message_report_itens(relatorio: ReportItens):
 
 
 def message_report_pedidos(relatorio: ReportPedidos):
-    message = f'*Pedidos* entre {escape_message(formatar_data(relatorio.de))} e {escape_message(formatar_data(relatorio.ate))}:\n\n'
+    if relatorio.de == relatorio.ate:
+        message = f'*Pedidos* de {escape_message(formatar_data(relatorio.de))}:\n\n'
+    else:
+        message = f'*Pedidos* entre {escape_message(formatar_data(relatorio.de))} e {escape_message(formatar_data(relatorio.ate))}:\n\n'
+
     message += '_*iFood*:_'
     message += escape_message(f"""
-Qtd. de pedidos: {relatorio.quantidade_ifood}
-Total vendido: {formatar_real(relatorio.total_ifood)}
-Ticket médio: {formatar_real(relatorio.ticket_medio_ifood)}\n\n""")
+Qtd. de pedidos: {relatorio.qtd_ifood}
+Total vendido: {formatar_real(relatorio.valor_ifood)}
+Ticket médio: {formatar_real(relatorio.ticket_medio_ifood)}
+Duração média: {tempo_atendimento(relatorio.tempo_medio_ifood)}\n\n""")
 
-    message += '_*WhatsApp*:_'
+    message += '_*Bot*:_'
     message += escape_message(f"""
-Qtd. de pedidos: {relatorio.quantidade_whatsapp}
-Total vendido: {formatar_real(relatorio.total_whatsapp)}
-Ticket médio: {formatar_real(relatorio.ticket_medio_whatsapp)}\n\n""")
+Qtd. de pedidos: {relatorio.qtd_bot}
+Total vendido: {formatar_real(relatorio.valor_bot)}
+Ticket médio: {formatar_real(relatorio.ticket_medio_bot)}
+Duração média: {tempo_atendimento(relatorio.tempo_medio_bot)}\n\n""")
+
+    message += '_*Delivery*:_'
+    message += escape_message(f"""
+Qtd. de pedidos: {relatorio.qtd_delivery}
+Total vendido: {formatar_real(relatorio.valor_delivery)}
+Ticket médio: {formatar_real(relatorio.ticket_medio_delivery)}
+Duração média: {tempo_atendimento(relatorio.tempo_medio_delivery)}\n\n""")
 
     message += '_*Presencial*:_'
     message += escape_message(f"""
-Qtd. de pedidos: {relatorio.quantidade_local}
-Total vendido: {formatar_real(relatorio.total_local)}
-Ticket médio: {formatar_real(relatorio.ticket_medio_local)}\n\n""")
+Qtd. de pedidos: {relatorio.qtd_local}
+Total vendido: {formatar_real(relatorio.valor_local)}
+Ticket médio: {formatar_real(relatorio.ticket_medio_local)}
+Duração média: {tempo_atendimento(relatorio.tempo_medio_local)}\n\n""")
 
     message += '*Total Geral:*'
     message += escape_message(f"""
-Qtd. de pedidos: {relatorio.quantidade_total}
+Qtd. de pedidos: {relatorio.qtd_total}
 Total vendido: {formatar_real(relatorio.valor_total)}
 Total fiado: {formatar_real(relatorio.valor_fiado)}
-Ticket médio: {formatar_real(relatorio.ticket_medio)}""")
+Ticket médio: {formatar_real(relatorio.ticket_medio)}
+Duração média: {tempo_atendimento(relatorio.tempo_medio)}""")
 
     return message

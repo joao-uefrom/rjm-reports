@@ -16,7 +16,8 @@ def get_pedidos(cur: Cursor, de: datetime, ate: datetime = None) -> List[Pedido]
            CASE
                WHEN pedido.NUMERO = -2 THEN 'Caixa'
                WHEN pedido.NUMERO = -1 THEN 'Balcão'
-               WHEN pedido.NUMERO = 0 AND pedido.CODIGOPEDIDOORIGEM = 1 THEN 'WhatsApp'
+               WHEN pedido.NUMERO = 0 AND pedido.CODIGOPEDIDOORIGEM = 1 THEN 'Delivery'
+               WHEN pedido.NUMERO = 0 AND pedido.CODIGOPEDIDOORIGEM = 6 THEN 'Bot'
                WHEN pedido.NUMERO = 0 AND pedido.CODIGOPEDIDOORIGEM = 7 THEN 'iFood'
                ELSE 'Mesa'
                END                                                      AS tipo_atendimento,

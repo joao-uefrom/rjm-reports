@@ -1,4 +1,3 @@
-import io
 from abc import ABC, abstractmethod
 from datetime import datetime
 from typing import List
@@ -86,49 +85,72 @@ class ReportItens(Report):
 
 
 class ReportPedidos(Report):
+    tempo_medio: int = 0
     ticket_medio: float
-    quantidade_total: int = 0
+    qtd_total: int = 0
     valor_total: float = 0
     valor_fiado: float = 0
 
+    tempo_medio_ifood: int = 0
     ticket_medio_ifood: float
-    quantidade_ifood: int = 0
-    total_ifood: float = 0
+    qtd_ifood: int = 0
+    valor_ifood: float = 0
 
-    ticket_medio_whatsapp: float
-    quantidade_whatsapp: int = 0
-    total_whatsapp: float = 0
+    tempo_medio_bot: int = 0
+    ticket_medio_bot: float
+    qtd_bot: int = 0
+    valor_bot: float = 0
 
+    tempo_medio_delivery: int = 0
+    ticket_medio_delivery: float
+    qtd_delivery: int = 0
+    valor_delivery: float = 0
+
+    tempo_medio_local: int = 0
     ticket_medio_local: float
-    quantidade_local: int = 0
-    total_local: float = 0
+    qtd_local: int = 0
+    valor_local: float = 0
 
     def __init__(self, de: datetime, ate: datetime, pedidos: List[Pedido]):
         self.de = de
         self.ate = ate
         self.pedidos = pedidos
-        self.quantidade_total = len(pedidos)
+        self.qtd_total = len(pedidos)
 
         for pedido in pedidos:
             self.valor_total += pedido.valor_total
+            self.tempo_medio += pedido.tempo_atendimento
 
             if pedido.eh_fiado:
                 self.valor_fiado += pedido.valor_total
 
             if pedido.tipo_atendimento == 'iFood':
-                self.total_ifood += pedido.valor_total
-                self.quantidade_ifood += 1
-            elif pedido.tipo_atendimento == 'WhatsApp':
-                self.total_whatsapp += pedido.valor_total
-                self.quantidade_whatsapp += 1
+                self.tempo_medio_ifood += pedido.tempo_atendimento
+                self.valor_ifood += pedido.valor_total
+                self.qtd_ifood += 1
+            elif pedido.tipo_atendimento == 'Bot':
+                self.tempo_medio_bot += pedido.tempo_atendimento
+                self.valor_bot += pedido.valor_total
+                self.qtd_bot += 1
+            elif pedido.tipo_atendimento == 'Delivery':
+                self.tempo_medio_delivery += pedido.tempo_atendimento
+                self.valor_delivery += pedido.valor_total
+                self.qtd_delivery += 1
             else:
-                self.total_local += pedido.valor_total
-                self.quantidade_local += 1
+                self.tempo_medio_local += pedido.tempo_atendimento
+                self.valor_local += pedido.valor_total
+                self.qtd_local += 1
 
-        self.ticket_medio_ifood = (self.total_ifood / self.quantidade_ifood) if self.quantidade_ifood > 0 else 0
-        self.ticket_medio_whatsapp = (self.total_whatsapp / self.quantidade_whatsapp) if self.quantidade_whatsapp > 0 else 0
-        self.ticket_medio_local = (self.total_local / self.quantidade_local) if self.quantidade_local > 0 else 0
-        self.ticket_medio = (self.valor_total / self.quantidade_total) if self.quantidade_total > 0 else 0
+        self.tempo_medio /= self.qtd_total
+        self.tempo_medio_ifood /= self.qtd_ifood
+        self.tempo_medio_bot /= self.qtd_bot
+        self.tempo_medio_delivery /= self.qtd_delivery
+        self.tempo_medio_local /= self.qtd_local
+        self.ticket_medio = (self.valor_total / self.qtd_total) if self.qtd_total > 0 else 0
+        self.ticket_medio_ifood = (self.valor_ifood / self.qtd_ifood) if self.qtd_ifood > 0 else 0
+        self.ticket_medio_bot = (self.valor_bot / self.qtd_bot) if self.qtd_bot > 0 else 0
+        self.ticket_medio_delivery = (self.valor_delivery / self.qtd_delivery) if self.qtd_delivery > 0 else 0
+        self.ticket_medio_local = (self.valor_local / self.qtd_local) if self.qtd_local > 0 else 0
         self.pedidos.sort(key=lambda x: x.codigo)
 
     def to_xlsx(self, workbook: Workbook, worksheet: Worksheet):
@@ -144,9 +166,9 @@ class ReportPedidos(Report):
             worksheet.outline_settings(visible=1, symbols_below=False)
             worksheet.set_column('A:A', 5)
             worksheet.set_column('B:B', 6)
-            worksheet.set_column('C:C', 15)
-            worksheet.set_column('D:D', 15)
-            worksheet.set_column('E:E', 15)
+            worksheet.set_column('C:C', 20)
+            worksheet.set_column('D:D', 20)
+            worksheet.set_column('E:E', 20)
             worksheet.set_column('F:F', 11)
             worksheet.set_column('G:G', 16)
             worksheet.set_column('H:H', 16)
